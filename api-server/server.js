@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const axios = require('axios');
 const rateLimit = require('express-rate-limit');
 const dotenv = require('dotenv');
+const cors = require('cors');
 
 // Load environment variables
 dotenv.config();
@@ -15,6 +16,9 @@ const host = process.env.HOST || '0.0.0.0';
 
 // Middleware to parse JSON
 app.use(bodyParser.json());
+
+
+app.use(cors());
 
 // Set up rate limiter
 const limiter = rateLimit({
@@ -37,7 +41,7 @@ const authenticateJWT = (req, res, next) => {
     // Extract token after 'Bearer ' (remove 'Bearer' part)
     const bearerToken = token.split(' ')[1];  // 'Bearer <token>'
 
-    console.log("Bearer Token : ", bearerToken);  // Log the token for debugging purposes
+    // console.log("Bearer Token : ", bearerToken);  // Log the token for debugging purposes
     
     // If the token does not exist after 'Bearer ', return 401
     if (!bearerToken) return res.status(401).json({ message: 'Token is missing' });
@@ -59,7 +63,7 @@ app.post('/api/v1/login', (req, res) => {
   // Dummy authentication logic (you can replace with your own)
   if (username === 'admin' && password === 'password') {
     const token = jwt.sign({ username }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    console.log("Token : ", token);
+    // console.log("Token : ", token);
     res.json({ token });
   } else {
     res.status(400).json({ message: 'Invalid credentials' });

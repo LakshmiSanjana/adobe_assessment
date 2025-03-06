@@ -2,6 +2,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const routes = require('./routes'); // Import the routes from routes.js
+const cors = require('cors'); // Enable CORS for cross-origin resource sharing
 
 // Load environment variables from .env file for local development
 require('dotenv').config();
@@ -14,6 +15,8 @@ const host = process.env.HOST || '0.0.0.0'; // Default to '0.0.0.0' for producti
 
 // Use body-parser to parse incoming requests with JSON payloads
 app.use(bodyParser.json());
+
+app.use(cors()); // Enable CORS for cross-origin resource sharing
 
 // Use the routes defined in routes.js
 app.use('/',routes); // Attach the routes to the app
