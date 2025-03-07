@@ -54,6 +54,3 @@ This frontend communicates with an API hosted at `http://18.119.235.205:5000/api
   - `DELETE /api/v1/contacts/:id` → for deleting a contact.
 
 ---
-
-## 📁 Project Structure
-
