@@ -12,7 +12,8 @@ dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 5000;
-const host = process.env.HOST || '0.0.0.0';
+const host = process.env.HOST;
+const hostApplicationServer = 'application-server';
 
 // Middleware to parse JSON
 app.use(bodyParser.json());
@@ -74,7 +75,7 @@ app.post('/api/v1/login', (req, res) => {
 app.use('/api/v1/contacts', authenticateJWT, async (req, res) => {
   try {
     // Forward the request to the Application Server
-    const applicationServerResponse = await axios.get(`http://${host}:3001/api/v1/contacts`);
+    const applicationServerResponse = await axios.get(`http://${hostApplicationServer}:3001/api/v1/contacts`);
     res.json(applicationServerResponse.data);
   } catch (err) {
     res.status(500).json({ error: err.message });

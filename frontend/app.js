@@ -1,3 +1,11 @@
+
+// Get the host from the environment or default to 'localhost' when testing locally
+const apiBaseURL = '18.119.235.205:5000';
+
+
+console.log("API Base URL " + apiBaseURL);
+
+
 document.getElementById("loginForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -11,7 +19,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
 
     try {
         // Send login request to API server
-        const response = await fetch("http://localhost:5000/api/v1/login", {
+        const response = await fetch(`http://${apiBaseURL}/api/v1/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -47,7 +55,7 @@ async function fetchContacts() {
     }
 
     try {
-        const response = await fetch("http://localhost:5000/api/v1/contacts", {
+        const response = await fetch(`http://${apiBaseURL}/api/v1/contacts`, {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + token

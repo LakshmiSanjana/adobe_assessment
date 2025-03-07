@@ -1,0 +1,41 @@
+version: '3'
+services:
+  api-server:
+    build:
+      context: ./api-server
+    ports:
+      - "5000:5000"
+    environment:
+      - JWT_SECRET=sanjana
+      - RATE_LIMIT_MAX=100
+      - RATE_LIMIT_WINDOW_MS=60000
+      - NODE_ENV=production
+      # - API_HOST=application-server          # Set the host for API server communication
+    depends_on:
+      - application-server
+    networks:
+      - app-network              # Connect to a custom network
+
+  application-server:
+    build:
+      context: ./application-server
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production  # Set the host for Application server communication
+    networks:
+      - app-network              # Connect to the same network
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "80:80"
+    networks:
+      - app-network              # Connect to the same network
+    environment:
+      - API_HOST=api-server       # Set the host for API server communication
+
+networks:
+  app-network:
+    driver: bridge               # Use a custom bridge network for communication
