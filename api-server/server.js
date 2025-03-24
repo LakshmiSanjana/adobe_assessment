@@ -71,11 +71,44 @@ app.post('/api/v1/login', (req, res) => {
   }
 });
 
+// Route to handle POST requests to create new contacts
+app.post('/api/v1/contacts', authenticateJWT, async (req, res) => {
+  try {
+    const newContact = req.body; // Assuming req.body contains the new contact details
+    // Forward the POST request to the Application Server
+    const applicationServerResponse = await axios.post(`http://${hostApplicationServer}:3001/api/v1/contacts`, newContact);
+    console.log(applicationServerResponse.data);
+    res.json(applicationServerResponse.data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Route to handle DELETE requests to delete contacts
+app.delete('/api/v1/contacts/:id', authenticateJWT, async (req, res) => {
+  try {
+    const contactId = req.params.id;
+    // Send DELETE request to the Application Server to delete the contact
+    const applicationServerResponse = await axios.delete(`http://${hostApplicationServer}:3001/api/v1/contacts/${contactId}`);
+
+    // Check if the delete was successful
+    if (applicationServerResponse.status === 200) {
+      res.json({ message: "Contact deleted successfully" });
+    } else {
+      res.status(400).json({ error: "Failed to delete contact" });
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
 // Route to proxy API requests to the Application Server
 app.use('/api/v1/contacts', authenticateJWT, async (req, res) => {
   try {
     // Forward the request to the Application Server
     const applicationServerResponse = await axios.get(`http://${hostApplicationServer}:3001/api/v1/contacts`);
+    console.log(applicationServerResponse.data);
     res.json(applicationServerResponse.data);
   } catch (err) {
     res.status(500).json({ error: err.message });
